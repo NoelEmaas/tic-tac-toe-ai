@@ -1,0 +1,135 @@
+export const checkGameStatus = (cells) => {
+    const lines = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6]
+    ];
+
+    for (let i = 0; i < lines.length; ++i) {
+        const [a, b, c] = lines[i];
+        if (cells[a] && cells[a] === cells[b] && cells[a] === cells[c]) {
+            return cells[a];
+        }
+    }
+
+    for (let i = 0; i < cells.length; ++i) {
+        if (!cells[i]) return null;
+    }
+
+    return 'draw';
+};
+
+
+export const minimax = (cells, depth, maximizingPlayer) => {
+    const winner = checkGameStatus(cells);
+
+    if (winner !== null) {
+        if (winner === 'O') {
+            return 1;
+        } else if (winner === 'X') {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
+
+    if (maximizingPlayer) {
+        let maxScore = -Infinity;
+        for (let i = 0; i < 9; ++i) {
+            if (cells[i] === null) {
+                cells[i] = 'O';
+                const score = minimax(cells, depth + 1, false);
+                cells[i] = null;
+                maxScore = Math.max(score, maxScore);
+            }
+        }
+        return maxScore;
+    }
+    else {
+        let minScore = Infinity;
+        for (let i = 0; i < 9; ++i) {
+            if (cells[i] === null) {
+                cells[i] = 'X';
+                const score = minimax(cells, depth + 1, true);
+                cells[i] = null;
+                minScore = Math.min(score, minScore);
+            }
+        }
+        return minScore;
+    }
+};
+
+
+export const getAvailableMoves = (cells) => {
+    let availableMoves = [];
+
+    for (let i = 0; i < cells.length; ++i) {
+        availableMoves.push(i);
+    }
+
+    return availableMoves;
+};
+
+
+export const getBestMove = (cells) => {
+    let bestMove;
+    let bestScore = -Infinity;
+
+    for (let i = 0; i < 9; ++i) {
+        if (cells[i] === null) {
+            cells[i] = 'O';
+            const score = minimax(cells, 0, false);
+            cells[i] = null;
+            if (score > bestScore) {
+                bestScore = score;
+                bestMove = i;
+            }
+        }
+    }
+
+    return bestMove;
+};
+
+
+export const getRandomMove = (cells) => {
+    const availableMoves = getAvailableMoves(cells);
+    return availableMoves[Math.floor(Math.random() * availableMoves.length)];
+};
+
+
+export const makeMove = (index, cells, currPlayer, difficulty, setNewCells, setNewCurrPlayer) => {
+    if (cells[index] || checkGameStatus(cells) || currPlayer !== 'X') {
+        return;
+    }
+
+    // set player's move;
+
+    const newCells = cells.slice();
+    newCells[index] = currPlayer;
+
+    setNewCurrPlayer(currPlayer === 'X' ? 'O' : 'X');
+    setNewCells(newCells);
+
+
+    // after player's move, set ai's move
+    
+    let computerMove;
+
+    if (difficulty === 'beatable') {
+        computerMove = getRandomMove(newCells);
+    }
+    else {
+        computerMove = getBestMove(newCells);
+    }
+
+    setTimeout(() => {
+        newCells[computerMove] = 'O';
+        setNewCurrPlayer('X');
+        setNewCells(newCells);
+    }, 500);
+};

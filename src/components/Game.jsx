@@ -1,17 +1,18 @@
 import { useState } from "react";
 import Board from './Board';
 import Indicators from './Indicators';
+import { makeMove } from "../utils/gameLogic";
 
 const Game = () => {
-    const [cells, setNewCells] = useState(Array(9).fill(null));
+    const [cells, setCells] = useState(Array(9).fill(null));
     const [currPlayer, setCurrPlayer] = useState('X');
+    const [difficulty, setDifficulty] = useState('unbeatable');
+
+    const setNewCells = (newCells) => setCells(newCells);
+    const setNewCurrPlayer = (newCurrPlayer) => setCurrPlayer(newCurrPlayer);
 
     const handlePlayerMove = (index) => {
-        const newCells = cells.slice();
-        newCells[index] = currPlayer;
-    
-        setCurrPlayer(currPlayer === 'X' ? 'O' : 'X');
-        setNewCells(newCells);
+        makeMove(index, cells, currPlayer, difficulty, setNewCells, setNewCurrPlayer);
     };
 
     return (
