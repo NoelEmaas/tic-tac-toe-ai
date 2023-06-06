@@ -17,3 +17,74 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
+
+.no-pointer {
+  pointer-events: none;
+}
+
+.vr {
+  height: 0px;
+  width: 2px;
+  background-color: #464646;
+  transition: height 0.5s ease-out;
+}
+
+.hr {
+  width: 0px;
+  height: 2px;
+  background-color: #464646;
+  transition: width 0.5s ease-out;
+}
+
+.vr.active {
+  height: 380px;
+}
+
+.hr.active {
+  width: 380px;
+}
+
+.x-shape {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.x-shape::before,
+.x-shape::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background-color: #464646;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+}
+
+.x-shape::before {
+  transform: translateY(-50%) rotate(45deg);
+}
+
+.x-shape::after {
+  transform: translateY(-50%) rotate(-45deg);
+}
+
+.o-shape {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  border: 2px solid #464646;
+  background-color: transparent;
+}
+
+.cross-out {
+  height: 0%;
+  width: 2px;
+  background-color: #464646;
+  transition: height 0.3s ease-out;
+}
+
+.cross-out.show {
+  height: 100%;
+}
