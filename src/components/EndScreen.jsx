@@ -1,7 +1,7 @@
-const EndScreen = () => {
+const EndScreen = ({gameStatus}) => {
     return (
-        <div className="absolute flex items-center justify-center">
-            <h1>Hello</h1>
+        <div className={`absolute flex items-center justify-center ${!gameStatus && ''}`}>
+
         </div>
     );
 };

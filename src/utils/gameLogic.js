@@ -138,6 +138,10 @@ export const makeMove = (index, cells, currPlayer, difficulty, setNewCells, setN
 
     gameStatus = checkGameStatus(newCells);
     updateGameStatus(gameStatus);
+
+    if (gameStatus) {
+        return;
+    }
     
     let computerMove;
 

@@ -53,6 +53,7 @@ const Game = () => {
                     <Indicators xScore={xScore} oScore={oScore} drawCount={drawCount} />
                 </div>
                 <StartScreen isGameStarting={gameStart} startGame={startGame} selectDifficulty={selectDifficulty}/>
+                <EndScreen />
             </div>
         </>
     );
