@@ -6,7 +6,7 @@ const Board = ({cells, onPlayerMove, gameStart, gameStatus}) => {
     };
 
     return (
-        <div className="grid grid-cols-3 board p-8 border-2 border-[#464646] rounded-lg relative mb-8 mt-12">
+        <div className={`grid grid-cols-3 board p-8 border-2 border-[#464646] rounded-lg relative mb-8 mt-12 ${!gameStart && 'no-pointer'}`}>
             {cells.map((cell, index) => (
                 <Cell
                     key={index}
@@ -39,8 +39,8 @@ const WinningLine = ({pattern, showCross}) => {
     };
   
     return (
-        <div className={`absolute w-full h-full bg-transparent ${(pattern !== 6 && pattern !== 7) && 'p-8'} flex justify-center no-pointer ${showCross ? 'show' : 'hidden'}`}>
-            <div style={lineStyle} className={`cross-out show`}></div>
+        <div className={`absolute w-full h-full bg-transparent ${(pattern !== 6 && pattern !== 7) && 'p-8'} flex justify-center no-pointer`}>
+            <div style={lineStyle} className={`cross-out ${!showCross ? 'hidden' : ''}`}></div>
         </div>
     );
 };

@@ -79,12 +79,7 @@
 }
 
 .cross-out {
-  height: 0%;
+  height: 100%;
   width: 2px;
   background-color: #464646;
-  transition: height 0.3s ease-out;
-}
-
-.cross-out.show {
-  height: 100%;
 }

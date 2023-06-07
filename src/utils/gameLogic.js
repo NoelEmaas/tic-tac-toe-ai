@@ -67,18 +67,20 @@ export const minimax = (cells, depth, maximizingPlayer) => {
 };
 
 
-export const getAvailableMoves = (cells) => {
+const getAvailableMoves = (cells) => {
     let availableMoves = [];
 
     for (let i = 0; i < cells.length; ++i) {
-        availableMoves.push(i);
+        if (cells[i] === null) {
+            availableMoves.push(i);
+        }
     }
 
     return availableMoves;
 };
 
 
-export const getBestMove = (cells) => {
+const getBestMove = (cells) => {
     let bestMove;
     let bestScore = -Infinity;
 
@@ -98,22 +100,33 @@ export const getBestMove = (cells) => {
 };
 
 
-export const getRandomMove = (cells) => {
+const getRandomMove = (cells) => {
     const availableMoves = getAvailableMoves(cells);
     return availableMoves[Math.floor(Math.random() * availableMoves.length)];
 };
 
 
-export const makeMove = (index, cells, currPlayer, difficulty, setNewCells, setNewCurrPlayer, updateGameStatus) => {
+const updateScore = (cells, incXScore, incOScore, incDrawCount) => {
+    let gameStatus = checkGameStatus(cells);
 
+    if (gameStatus !== null) {
+        if (gameStatus[0] === 'win') {
+            (gameStatus[2] === 'X') && incXScore();
+            (gameStatus[2] === 'O') && incOScore();
+        }
+        else{
+            incDrawCount();
+        }
+    }
+}
+
+
+export const makeMove = (index, cells, currPlayer, difficulty, setNewCells, setNewCurrPlayer, updateGameStatus, incXScore, incOScore, incDrawCount) => {
     let gameStatus = checkGameStatus(cells);
 
     if (cells[index] || gameStatus || currPlayer !== 'X') {
         return;
     }
-
-    console.log(gameStatus);
-    updateGameStatus(gameStatus);
 
     const newCells = cells.slice();
     newCells[index] = currPlayer;
@@ -121,8 +134,9 @@ export const makeMove = (index, cells, currPlayer, difficulty, setNewCells, setN
     setNewCurrPlayer(currPlayer === 'X' ? 'O' : 'X');
     setNewCells(newCells);
 
+    updateScore(newCells, incXScore, incOScore, incDrawCount);
+
     gameStatus = checkGameStatus(newCells);
-    console.log(gameStatus);
     updateGameStatus(gameStatus);
     
     let computerMove;
@@ -139,8 +153,8 @@ export const makeMove = (index, cells, currPlayer, difficulty, setNewCells, setN
         setNewCurrPlayer('X');
         setNewCells(newCells);
         gameStatus = checkGameStatus(newCells);
-        console.log(gameStatus);
         updateGameStatus(gameStatus);
+        updateScore(newCells, incXScore, incOScore, incDrawCount);
     }, 500);
 
 
