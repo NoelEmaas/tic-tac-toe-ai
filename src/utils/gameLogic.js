@@ -13,7 +13,7 @@ export const checkGameStatus = (cells) => {
     for (let i = 0; i < lines.length; ++i) {
         const [a, b, c] = lines[i];
         if (cells[a] && cells[a] === cells[b] && cells[a] === cells[c]) {
-            return cells[a];
+            return ['win', i, cells[a]];
         }
     }
 
@@ -21,7 +21,7 @@ export const checkGameStatus = (cells) => {
         if (!cells[i]) return null;
     }
 
-    return 'draw';
+    return ['draw'];
 };
 
 
@@ -29,10 +29,12 @@ export const minimax = (cells, depth, maximizingPlayer) => {
     const winner = checkGameStatus(cells);
 
     if (winner !== null) {
-        if (winner === 'O') {
-            return 1;
-        } else if (winner === 'X') {
-            return -1;
+        if (winner[0] === 'win') {
+            if (winner[2] === 'O') {
+                return 1;
+            } else {
+                return -1;
+            }
         } else {
             return 0;
         }
@@ -102,12 +104,16 @@ export const getRandomMove = (cells) => {
 };
 
 
-export const makeMove = (index, cells, currPlayer, difficulty, setNewCells, setNewCurrPlayer) => {
-    if (cells[index] || checkGameStatus(cells) || currPlayer !== 'X') {
+export const makeMove = (index, cells, currPlayer, difficulty, setNewCells, setNewCurrPlayer, updateGameStatus) => {
+
+    let gameStatus = checkGameStatus(cells);
+
+    if (cells[index] || gameStatus || currPlayer !== 'X') {
         return;
     }
 
-    // set player's move;
+    console.log(gameStatus);
+    updateGameStatus(gameStatus);
 
     const newCells = cells.slice();
     newCells[index] = currPlayer;
@@ -115,8 +121,9 @@ export const makeMove = (index, cells, currPlayer, difficulty, setNewCells, setN
     setNewCurrPlayer(currPlayer === 'X' ? 'O' : 'X');
     setNewCells(newCells);
 
-
-    // after player's move, set ai's move
+    gameStatus = checkGameStatus(newCells);
+    console.log(gameStatus);
+    updateGameStatus(gameStatus);
     
     let computerMove;
 
@@ -131,5 +138,10 @@ export const makeMove = (index, cells, currPlayer, difficulty, setNewCells, setN
         newCells[computerMove] = 'O';
         setNewCurrPlayer('X');
         setNewCells(newCells);
+        gameStatus = checkGameStatus(newCells);
+        console.log(gameStatus);
+        updateGameStatus(gameStatus);
     }, 500);
+
+
 };

@@ -1,7 +1,6 @@
 import Cell from './Cell';
 
-const Board = ({cells, onPlayerMove, gameStart, gameEnd}) => {
-
+const Board = ({cells, onPlayerMove, gameStart, gameStatus}) => {
     const handleCellClick = (index) => {
         onPlayerMove(index);
     };
@@ -21,9 +20,27 @@ const Board = ({cells, onPlayerMove, gameStart, gameEnd}) => {
                 <div className={`hr  mb-32 absolute rounded-md  ${gameStart ? 'active' : ''}`}></div>
                 <div className={`hr  mt-32 absolute rounded-md  ${gameStart ? 'active' : ''}`}></div>
             </div>
-            <div className='absolute w-full h-full bg-transparent p-8 flex justify-center no-pointer'>
-                <div className={`cross-out ${(gameEnd) ? 'show' : ''}`}></div>
-            </div>
+            <WinningLine pattern={(gameStatus !== null) ? gameStatus[1] : null} showCross={(gameStatus !== null && gameStatus[0] === 'win')}/>
+        </div>
+    );
+};
+
+
+const WinningLine = ({pattern, showCross}) => {
+    const lineStyle = {
+        ...(pattern === 0 && {transform: 'translate(0, -33%) rotate(90deg)'}),
+        ...(pattern === 1 && {transform: 'translate(0, 0) rotate(90deg)'}),
+        ...(pattern === 2 && {transform: 'translate(0, 33%) rotate(90deg)'}),
+        ...(pattern === 3 && {transform: 'translate(-128px, 0)'}),
+        ...(pattern === 4 && {transform: 'translate(0, 0)'}),
+        ...(pattern === 5 && {transform: 'translate(128px, 0)'}),
+        ...(pattern === 6 && {transform: 'translate(0, 0) rotate(-45deg)'}),
+        ...(pattern === 7 && {transform: 'translate(0, 0) rotate(45deg)'}),
+    };
+  
+    return (
+        <div className={`absolute w-full h-full bg-transparent ${(pattern !== 6 && pattern !== 7) && 'p-8'} flex justify-center no-pointer ${showCross ? 'show' : 'hidden'}`}>
+            <div style={lineStyle} className={`cross-out show`}></div>
         </div>
     );
 };
